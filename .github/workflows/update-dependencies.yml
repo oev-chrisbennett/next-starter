@@ -6,6 +6,10 @@ on:
 jobs:
   update-dependencies:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    timeout-minutes: 5
     steps:
       - name: ⬇️ Checkout repository
         uses: actions/checkout@v4
@@ -13,12 +17,15 @@ jobs:
       - name: 🛠️ Setup Bun
         uses: oven-sh/setup-bun@v1
 
+      - name: 📦 Install dependencies
+        run: bun install --frozen-lockfile
+
       - name: ✨ Check for updates with taze
         id: taze
         run: |
-
+          TAZE_OUTPUT=$(bun run taze -i -w | tee /dev/stdout)
           echo "TAZE_OUTPUT<<EOF" >> $GITHUB_ENV
-          bunx taze -r -i >> $GITHUB_ENV
+          echo "$TAZE_OUTPUT" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
       - name: 🤖 Create Pull Request
