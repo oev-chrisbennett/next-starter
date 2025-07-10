@@ -1,0 +1,7 @@
+pre-commit:
+  parallel: false
+  jobs:
+    - name: 🔷 Biome lint / format
+      run: bun lint
+    - name: 🧪 Vitest
+      run: bun test
