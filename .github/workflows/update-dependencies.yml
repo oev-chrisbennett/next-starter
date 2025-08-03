@@ -2,6 +2,8 @@ name: 📦 Update Dependencies
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '0 8 * * *'
 
 jobs:
   update-dependencies:
@@ -23,10 +25,10 @@ jobs:
       - name: ✨ Check for updates with taze
         id: taze
         run: |
-          TAZE_OUTPUT=$(bun run taze -i -w | tee /dev/stdout)
-          echo "TAZE_OUTPUT<<EOF" >> $GITHUB_ENV
-          echo "$TAZE_OUTPUT" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
+          TAZE_OUTPUT=$(bun update-deps | tee /dev/stdout)
+          echo "TAZE_OUTPUT<<EOF" >> $GITHUB_OUTPUT
+          echo "$TAZE_OUTPUT" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
 
       - name: 🤖 Create Pull Request
         uses: peter-evans/create-pull-request@v7
